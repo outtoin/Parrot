@@ -6,7 +6,7 @@ from source import exchange
 # Constant variables
 BOT_ID = os.environ["BOT_ID"]
 AT_BOT = "<@" + BOT_ID + ">"
-EXAMPLE_COMMAND = "달러 환율"
+EXAMPLE_COMMAND = "환율"
 BOT_NAME = "parrot-bot"
 
 sc = SlackClient(os.environ["SLACK_API_TOKEN"])
@@ -20,8 +20,8 @@ def handle_command(command, channel):
     """
     response = "뭐라는거야. 이런 명령어를 쓰도록 해 *" + EXAMPLE_COMMAND + "*"
     if command.startswith(EXAMPLE_COMMAND):
-        result = exchange.get_exchange()
-        response = "현재 달러 환율이래 {} :fastparrot:".format(result[0]['Buy'])
+        result = exchange.get_exchange(command)
+        response = "현재 환율이래 {} :fastparrot:".format(result)
 
     sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
     return print("Post message")

@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 URI = "http://info.finance.naver.com/marketindex/exchangeList.nhn"
 
 
-def get_exchange():
+def get_exchange(country):
     """
     Tells the exchange rate of each country
     :return: json array
@@ -33,7 +33,10 @@ def get_exchange():
                 ConversionRate=cols[6]
             )
             result.append(data)
-        return result
+
+        country = country.replace('환율 ', '')
+        result = [each['Buy'] for each in result if country in each['currency']]
+        return result[0]
 
     except HTTPError as e:
         print(e)
