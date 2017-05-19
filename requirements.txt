@@ -1,6 +1,11 @@
+apipkg==1.4
 beautifulsoup4==4.5.3
+execnet==1.4.1
+pep8==1.7.0
 py==1.4.33
 pytest==3.0.7
+pytest-cache==1.0
+pytest-pep8==1.0.6
 requests==2.13.0
 six==1.10.0
 slackclient==1.0.5

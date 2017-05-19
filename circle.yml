@@ -1,6 +1,6 @@
 test:
     override:
-        - pytest test_command.py
+        - pytest --pep8 -s test_command.py
 
 dependencies:
     pre:
