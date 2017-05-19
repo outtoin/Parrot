@@ -1,6 +1,6 @@
 test:
     override:
-        - pytest test_sample.py
+        - pytest test_command.py
 
 dependencies:
     pre:
