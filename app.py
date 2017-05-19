@@ -21,7 +21,12 @@ def handle_command(command, channel):
     response = "뭐라는거야. 이런 명령어를 쓰도록 해 *" + EXAMPLE_COMMAND + "*"
     if command.startswith(EXAMPLE_COMMAND):
         result = exchange.get_exchange(command)
-        response = "현재 환율이래 {} :fastparrot:".format(result)
+
+        if result['status'] == 'OK':
+            response = "현재 환율은 {} 이래 :fastparrot:".format(result['data'])
+
+        else:
+            response = "음...뭔가 잘못 입력한게 아닐까? :sadparrot:"
 
     sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
     return print("Post message")
