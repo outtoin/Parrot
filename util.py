@@ -1,5 +1,8 @@
 # Constant variables
+import os
 BOT_NAME = "parrot-bot"
+BOT_ID = os.environ["BOT_ID"]
+AT_BOT = "<@" + BOT_ID + ">"
 
 
 def get_bot_id(sc):
@@ -12,3 +15,23 @@ def get_bot_id(sc):
                 print("Bot ID for '" + user['name'] + "' is " + user.get('id'))
     else:
         print("could not find bot user with the name " + BOT_NAME)
+
+def parse_slack_output(slack_rtm_output):
+    """
+        The Slack Real Time Messaging API is an events firehose.
+        this parsing function returns None unless a message is
+        directed at the Bot, based on its ID.
+    """
+    output_list = slack_rtm_output
+    if output_list and len(output_list) > 0:
+        for output in output_list:
+            if output and 'text' in output and AT_BOT in output['text']:
+                # return text after the @ mention, whitespace removed
+                return output['text'].split(AT_BOT)[1].strip().lower(), \
+                       output['channel']
+    return None, None
+
+def handle_error(sc):
+    response = "(local)뭐라는거야. 이런 명령어를 쓰도록 해 *" + EXAMPLE_COMMAND + "*"
+    sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
+ 
