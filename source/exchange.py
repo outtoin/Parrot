@@ -7,6 +7,9 @@ URI = "http://info.finance.naver.com/marketindex/exchangeList.nhn"
 
 
 def get_exchange(country):
+
+    res = dict()
+
     """
     Tells the exchange rate of each country
     :return: json array
@@ -36,7 +39,15 @@ def get_exchange(country):
 
         country = country.replace('환율 ', '')
         result = [each['Buy'] for each in result if country in each['currency']]
-        return result[0] if len(result) >0 else "undefined"
+
+        if len(result) > 0:
+            res['status'] = 'OK'
+            res['data'] = result[0]
+            return res
+
+        else:
+            res['status'] = 'undefined'
+            return res
 
     except HTTPError as e:
         print(e)
