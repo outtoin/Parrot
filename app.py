@@ -2,10 +2,9 @@ import os
 import time
 from slackclient import SlackClient
 from source import exchange
-from util import parse_slack_output,handle_error
+from util import parse_slack_output,handle_error,parrot_says
 
 # Constant variables
-EXAMPLE_COMMAND = "환율"
 BOT_NAME = "parrot-bot"
 
 sc = SlackClient(os.environ["SLACK_API_TOKEN"])
@@ -16,7 +15,7 @@ def exchange_model(command):
     return None
         
 models = [ exchange_model ]
-parrots = [ exchange.ExchangeParrot(sc) ] 
+parrots = [ exchange.ExchangeParrot() ] 
 parrot_cage = {}
 for parrot in parrots:
     parrot_cage[parrot.NAME] = parrot.generate_actor()
@@ -30,7 +29,8 @@ if __name__ == "__main__":
             success = 0 # if all model failed, command is not valid
             for model in models:
                 if model(command):
-                    parrot_cage[model(command)](command,channel)
+                    result = parrot_cage[model(command)](command)
+                    parrot_says(result, channel, sc)
                     success += 1
             if command and success == 0: # if command is '', handle_error wouldn't be executed
                 handle_error(sc)

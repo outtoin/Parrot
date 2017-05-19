@@ -1,0 +1,7 @@
+test:
+    override:
+        - pytest --pep8 -s test_command.py
+
+dependencies:
+    pre:
+       -  pip install -r requirements.txt

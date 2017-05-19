@@ -3,15 +3,12 @@ from urllib.error import HTTPError
 from bs4 import BeautifulSoup
 
 
-
 class ExchangeParrot:
     URI = "http://info.finance.naver.com/marketindex/exchangeList.nhn"
     NAME = 'exchange'
-    def __init__(self,sc):
-        self.sc = sc
     def _parser(self,command):
         return command.replace('환율 ','')
-    def _get_exchange(self,country,channel):
+    def _get_exchange(self,country):
         """
         Tells the exchange rate of each country
         :return: json array
@@ -40,18 +37,21 @@ class ExchangeParrot:
                 result.append(data)
 
             result = [each['Buy'] for each in result if country in each['currency']]
-            exchange = result[0] if len(result) >0 else "undefined"
-            response = "(local)현재 환율이래 {} :fastparrot:".format(exchange)
-            self.sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
-            return print("Post message")
-
+            res = {}
+            if len(result) > 0:
+                res['status'] = 'OK'
+                res['data'] = result[0]
+                return res
+            else:
+                res['status'] = 'undefined'
+                return res
 
         except HTTPError as e:
             print(e)
             return None
 
     def generate_actor(self):
-        def _actor(command,channel):
+        def _actor(command):
             country = self._parser(command)
-            return self._get_exchange(country,channel)
+            return self._get_exchange(country)
         return _actor
