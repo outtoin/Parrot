@@ -1,6 +1,6 @@
-# Parrot
-### Make Parrot Great Again!!!
-### Lightweight, Purposeless, Miscellaneous Slack Bot Collections.
+# Parrot [![CircleCI](https://circleci.com/gh/Swalloow/Parrot.svg?style=svg)](https://circleci.com/gh/Swalloow/Parrot)
+#### Make Parrot Great Again!!!
+#### Lightweight, Purposeless, Miscellaneous Slack Bot Collections.
 ![parrot](http://img1.daumcdn.net/thumb/R1920x0/?fname=http%3A%2F%2Fcfile7.uf.tistory.com%2Fimage%2F2720574958F44ABD11671E)
 
 ## Requirements and Installation
@@ -18,7 +18,7 @@ python app.py
 ```
 MIT License
 
-Copyright (c) 2017 Junyoung Park(Maintainer); Seungwoo Lee; Youngchan Kim; Youngtaek Oh
+Copyright (c) 2017 Parrot Co., Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
