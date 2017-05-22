@@ -1,21 +1,20 @@
-import os
 import time
+
+import os
 from slackclient import SlackClient
-from source import exchange
-from util import parse_slack_output,handle_error,parrot_says
+
+from parrots import exchange
+from models import exchange_model
+
+from util import parse_slack_output, handle_error, parrot_says
 
 # Constant variables
 BOT_NAME = "parrot-bot"
 
 sc = SlackClient(os.environ["SLACK_API_TOKEN"])
-
-def exchange_model(command):
-    if command and command.startswith("환율"):
-        return "exchange"
-    return None
         
 models = [ exchange_model ]
-parrots = [ exchange.ExchangeParrot() ] 
+parrots = [exchange.ExchangeParrot()]
 parrot_cage = {}
 for parrot in parrots:
     parrot_cage[parrot.NAME] = parrot.generate_actor()
