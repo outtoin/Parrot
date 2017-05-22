@@ -5,6 +5,7 @@ BOT_ID = os.environ["BOT_ID"]
 AT_BOT = "<@" + BOT_ID + ">"
 EXAMPLE_COMMAND = "환율"
 
+
 def get_bot_id(sc):
     api_call = sc.api_call("users.list")
     if api_call.get('ok'):
@@ -15,6 +16,7 @@ def get_bot_id(sc):
                 print("Bot ID for '" + user['name'] + "' is " + user.get('id'))
     else:
         print("could not find bot user with the name " + BOT_NAME)
+
 
 def parse_slack_output(slack_rtm_output):
     """
@@ -50,5 +52,3 @@ def parrot_says(result, channel, sc):
 
     sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
     return print("Post message")
-
- 

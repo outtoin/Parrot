@@ -13,7 +13,7 @@ BOT_NAME = "parrot-bot"
 
 sc = SlackClient(os.environ["SLACK_API_TOKEN"])
         
-models = [ exchange_model ]
+models = [exchange_model]
 parrots = [exchange.ExchangeParrot()]
 parrot_cage = {}
 for parrot in parrots:

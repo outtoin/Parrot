@@ -6,8 +6,10 @@ from bs4 import BeautifulSoup
 class ExchangeParrot:
     URI = "http://info.finance.naver.com/marketindex/exchangeList.nhn"
     NAME = 'exchange'
+
     def _parser(self,command):
         return command.replace('환율 ','')
+
     def _get_exchange(self,country):
         """
         Tells the exchange rate of each country
