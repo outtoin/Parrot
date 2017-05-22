@@ -20,10 +20,10 @@ for parrot in parrots:
     parrot_cage[parrot.NAME] = parrot.generate_actor()
 
 
-def response(command):
+def response(cmd):
     for model in models:
-        if model(command):
-            return parrot_cage[model(command)](command)
+        if model(cmd):
+            return parrot_cage[model(cmd)](cmd)
     return None
 
 
@@ -32,10 +32,8 @@ if __name__ == "__main__":
     if sc.rtm_connect():
         print("Parrot-Bot connected and running!")
         while True:
+            command, channel = parse_slack_output(sc.rtm_read())
             try:
-                command, channel = parse_slack_output(sc.rtm_read())
-                success = 0 # if all model failed, command is not valid
-
                 result = response(command)
                 if result:
                     if result['status'] == 'OK':
@@ -45,7 +43,7 @@ if __name__ == "__main__":
                 else:
                     result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
                     handle_error(result, channel, sc)  # if command is '', handle_error wouldn't be executed
-            except:
+            except Exception as e:
                 result = dict(status='error')
                 handle_error(result, channel, sc)
 
