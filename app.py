@@ -6,7 +6,7 @@ from slackclient import SlackClient
 from parrots import exchange
 from models import exchange_model
 
-from util import parse_slack_output, handle_error, parrot_says
+from util import parse_slack_output, handle_error, parrot_says, EXAMPLE_COMMAND
 
 # Constant variables
 BOT_NAME = "parrot-bot"
@@ -34,12 +34,16 @@ if __name__ == "__main__":
         while True:
             command, channel = parse_slack_output(sc.rtm_read())
             success = 0 # if all model failed, command is not valid
-            if command:
-                result = response(command)
-                if result:
+
+            result = response(command)
+            if result:
+                if result['status'] == 'OK':
                     parrot_says(result, channel, sc)
                 else:
-                    handle_error(sc)  # if command is '', handle_error wouldn't be executed
+                    handle_error(result, channel, sc)
+            else:
+                result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
+                handle_error(result, channel, sc)  # if command is '', handle_error wouldn't be executed
 
             time.sleep(READ_WEBSOCKET_DELAY)
     else:

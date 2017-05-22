@@ -40,15 +40,18 @@ class ExchangeParrot:
             res = {}
             if len(result) > 0:
                 res['status'] = 'OK'
-                res['data'] = result[0]
-                return res
+                res['message'] = '현재 환율은 {} 이래 :fastparrot:'.format(result[0])
             else:
                 res['status'] = 'undefined'
-                return res
+                res['message'] = '음...뭔가 잘못 입력한게 아닐까? :sadparrot:'
 
+            return res
         except HTTPError as e:
             print(e)
-            return None
+            res = {}
+            res['status'] = 'error'
+            res['message'] = '데이터를 가져 올 수가 없어'
+            return res
 
     def generate_actor(self):
         def _actor(command):
