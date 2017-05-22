@@ -19,6 +19,14 @@ parrot_cage = {}
 for parrot in parrots:
     parrot_cage[parrot.NAME] = parrot.generate_actor()
 
+
+def response(command):
+    for model in models:
+        if model(command):
+            return parrot_cage[model(command)](command)
+    return None
+
+
 if __name__ == "__main__":
     READ_WEBSOCKET_DELAY = 1
     if sc.rtm_connect():
@@ -26,13 +34,13 @@ if __name__ == "__main__":
         while True:
             command, channel = parse_slack_output(sc.rtm_read())
             success = 0 # if all model failed, command is not valid
-            for model in models:
-                if model(command):
-                    result = parrot_cage[model(command)](command)
+            if command:
+                result = response(command)
+                if result:
                     parrot_says(result, channel, sc)
-                    success += 1
-            if command and success == 0: # if command is '', handle_error wouldn't be executed
-                handle_error(sc)
+                else:
+                    handle_error(sc)  # if command is '', handle_error wouldn't be executed
+
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
         print("Connection failed. Invalid Slack token or bot ID")
