@@ -52,3 +52,4 @@ def parrot_says(result, channel, sc):
 
     sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
     return print("Post message")
+
