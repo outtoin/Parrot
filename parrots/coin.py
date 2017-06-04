@@ -1,10 +1,9 @@
 from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import TimeoutException
-
 from bs4 import BeautifulSoup
+
+from time import time
+
+import json
 
 
 class CoinParrot:
@@ -13,19 +12,6 @@ class CoinParrot:
 
     def _get_coin_exchange(self, command):
         driver = webdriver.PhantomJS()
-
-        '''
-        try:
-            WebDriverWait(driver, 5).until(
-                EC.presence_of_element_located((By.ID, 'g_table')))
-
-        except TimeoutException as ex:
-            print (ex.message)
-            res = {}
-            res['status'] = 'error'
-            res['message'] = '뭔가 문제가 있는 것 같아..:explodyparrot:'
-            return res
-        '''
 
         driver.get(self.URI)
 
@@ -57,24 +43,42 @@ class CoinParrot:
 
         res = {}
         if len(result) > 0:
-            text = []
+            attachments = []
             for data in result:
-                rowData = data['coinName'] + ": " + \
-                    data['coinPrice'] + "(" + data['coinPriceChange'] + ")"
 
                 if data['coinPriceChange_pm'] == '+' and float(data['coinPriceChange_percent']) > 5:
-                    rowData = '*' + rowData + '*'
+                    color = "good"
                 elif data['coinPriceChange_pm'] == '-' and float(data['coinPriceChange_percent']) > 5:
-                    rowData = '_' + rowData + '_'
+                    color = "danger"
+                else:
+                    color = "warning"
 
-                text.append(rowData)
+                attachment = {
+                    "title": data['coinName'],
+                    "text": data['coinPrice'],
+                    "color": color,
+                    "fields": [
+                        {
+                            "title": '24시간 변동량',
+                            "value": data['coinPriceChange_pm'] +
+                            data['coinPriceChange_num'] + "원",
+                            "short": 'true'
+                        },
+                        {
+                            "title": '24시간 변동률(%)',
+                            "value": data['coinPriceChange_pm'] +
+                            data['coinPriceChange_percent'] + "%",
+                            "short": 'true'
+                        }
+                    ],
+                    "footer": "Parrot",
+                    "ts": time()
+                }
 
-            resText = ""
-            for line in text:
-                resText = resText + line + "\n"
+                attachments.append(attachment)
 
             res['status'] = 'OK'
-            res['message'] = '*현재시세* : \n' + resText + ":fastparrot:"
+            res['message'] = attachments
 
             return res
 

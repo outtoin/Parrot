@@ -1,5 +1,6 @@
 # Constant variables
 import os
+import json
 BOT_NAME = "parrot-bot"
 BOT_ID = os.environ["BOT_ID"]
 AT_BOT = "<@" + BOT_ID + ">"
@@ -30,7 +31,7 @@ def parse_slack_output(slack_rtm_output):
             if output and 'text' in output and AT_BOT in output['text']:
                 # return text after the @ mention, whitespace removed
                 return output['text'].split(AT_BOT)[1].strip().lower(), \
-                       output['channel']
+                    output['channel']
     return None, None
 
 
@@ -40,7 +41,8 @@ def handle_error(result, channel, sc):
     else:
         response = result['message']
 
-    sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
+    sc.api_call("chat.postMessage", channel=channel,
+                text=response, as_user=True)
 
 
 def parrot_says(result, channel, sc):
@@ -49,6 +51,11 @@ def parrot_says(result, channel, sc):
         are valid commands. If so, then acts on the commands. If not,
         returns back what it needs for clarification.
     """
-
-    sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
+    print(type(result['message']))
+    if type(result['message']) == str:
+        sc.api_call("chat.postMessage", channel=channel,
+                    text=result['message'], as_user=True)
+    elif type(result['message']) == list:
+        sc.api_call("chat.postMessage", channel=channel,
+                    attachments=json.dumps(result['message']), as_user=True)
     return print("Post message")
