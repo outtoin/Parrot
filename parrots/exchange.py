@@ -7,10 +7,10 @@ class ExchangeParrot:
     URI = "http://info.finance.naver.com/marketindex/exchangeList.nhn"
     NAME = 'exchange'
 
-    def _parser(self,command):
-        return command.replace('환율 ','')
+    def _parser(self, command):
+        return command.replace('환율 ', '')
 
-    def _get_exchange(self,country):
+    def _get_exchange(self, country):
         """
         Tells the exchange rate of each country
         :return: json array
@@ -38,11 +38,13 @@ class ExchangeParrot:
                 )
                 result.append(data)
 
-            result = [each['Buy'] for each in result if country in each['currency']]
+            result = [each['Buy']
+                      for each in result if country in each['currency']]
             res = {}
             if len(result) > 0:
                 res['status'] = 'OK'
-                res['message'] = '현재 환율은 {} 이래 :fastparrot:'.format(result[0])
+                res['message'] = '현재 ' + country + \
+                    ' 환율은 {} 이래 :fastparrot:'.format(result[0])
             else:
                 res['status'] = 'undefined'
                 res['message'] = '음...뭔가 잘못 입력한게 아닐까? :sadparrot:'

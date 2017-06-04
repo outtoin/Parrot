@@ -9,7 +9,8 @@ Using [python-slackclient](https://github.com/slackapi/python-slackclient)
 
 ```
 git clone https://github.com/Swalloow/Parrot.git
-pip install -r requirements.txt
+pip install -r requirements.txt'
+brew install phantomjs
 python app.py
 ```
 
