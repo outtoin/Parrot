@@ -8,6 +8,8 @@ from models import exchange_model
 
 from util import parse_slack_output, handle_error, parrot_says, EXAMPLE_COMMAND
 
+from requests.exceptions import ConnectionError
+
 # Constant variables
 BOT_NAME = "parrot-bot"
 
@@ -32,20 +34,17 @@ if __name__ == "__main__":
     if sc.rtm_connect():
         print("Parrot-Bot connected and running!")
         while True:
-            command, channel = parse_slack_output(sc.rtm_read())
             try:
-                result = response(command)
-                if result:
-                    if result['status'] == 'OK':
-                        parrot_says(result, channel, sc)
-                    else:
-                        handle_error(result, channel, sc)
+                command, channel = parse_slack_output(sc.rtm_read())
+                if command:
+                    parrot_says(response, command, channel, sc)
+            except (ConnectionError,Exception) as e:
+                if isinstance(e,ConnectionError):
+                    print("slack refused to connect, i will sleep 5 second!")
+                    sleep(5)
                 else:
-                    result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
-                    handle_error(result, channel, sc)  # if command is '', handle_error wouldn't be executed
-            except Exception as e:
-                result = dict(status='error')
-                handle_error(result, channel, sc)
+                    result = dict(status='error')
+                    handle_error(result, channel, sc)
 
             time.sleep(READ_WEBSOCKET_DELAY)
     else:
