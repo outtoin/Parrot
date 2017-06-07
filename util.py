@@ -44,13 +44,20 @@ def handle_error(result, channel, sc):
     sc.api_call("chat.postMessage", channel=channel, text=response, as_user=True)
 
 
-def parrot_says(result, channel, sc):
+def parrot_says(response_function, command, channel, sc):
     """
         Receives commands directed at the bot and determines if they
         are valid commands. If so, then acts on the commands. If not,
         returns back what it needs for clarification.
     """
     def _async():
-        sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
+        result = response_function(command)
+        if result and result['status'] == 'OK':
+            sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
+        elif result and result['status'] != 'OK':
+            handle_error(result, channel, sc) 
+        elif not result:
+            result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
+            handle_error(result, channel, sc)
         print('post message')
     gevent.joinall([gevent.spawn(_async)])

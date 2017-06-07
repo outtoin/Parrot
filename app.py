@@ -36,15 +36,8 @@ if __name__ == "__main__":
         while True:
             try:
                 command, channel = parse_slack_output(sc.rtm_read())
-                result = response(command)
-                if result:
-                    if result['status'] == 'OK':
-                        parrot_says(result, channel, sc)
-                    else:
-                        handle_error(result, channel, sc)
-                else:
-                    result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
-                    handle_error(result, channel, sc)  # if command is '', handle_error wouldn't be executed
+                if command:
+                    parrot_says(response, command, channel, sc)
             except (ConnectionError,Exception) as e:
                 if isinstance(e,ConnectionError):
                     print("slack refused to connect, i will sleep 5 second!")
