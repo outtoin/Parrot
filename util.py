@@ -1,5 +1,6 @@
 # Constant variables
 import os
+import gevent
 BOT_NAME = "parrot-bot"
 BOT_ID = os.environ["BOT_ID"]
 AT_BOT = "<@" + BOT_ID + ">"
@@ -49,6 +50,7 @@ def parrot_says(result, channel, sc):
         are valid commands. If so, then acts on the commands. If not,
         returns back what it needs for clarification.
     """
-
-    sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
-    return print("Post message")
+    def _async():
+        sc.api_call("chat.postMessage", channel=channel, text=result['message'], as_user=True)
+        print('post message')
+    gevent.joinall([gevent.spawn(_async)])
