@@ -8,6 +8,8 @@ from models import exchange_model
 
 from util import parse_slack_output, handle_error, parrot_says, EXAMPLE_COMMAND
 
+from requests.exceptions import ConnectionError
+
 # Constant variables
 BOT_NAME = "parrot-bot"
 
@@ -43,8 +45,8 @@ if __name__ == "__main__":
                 else:
                     result = dict(status='error', message='뭐라는거야. 이런 명령어를 쓰도록 해 *' + EXAMPLE_COMMAND + "*")
                     handle_error(result, channel, sc)  # if command is '', handle_error wouldn't be executed
-            except (requests.exceptions.ConnectionError,Exception) as e:
-                if isinstance(e,requests.exceptions.ConnectionError):
+            except (ConnectionError,Exception) as e:
+                if isinstance(e,ConnectionError):
                     print("slack refused to connect, i will sleep 5 second!")
                     sleep(5)
                 else:
