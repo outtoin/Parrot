@@ -1,6 +1,6 @@
 # Constant variables
 import os
-from multiprocessing import Process 
+from multiprocessing import Process
 BOT_NAME = "parrot-bot"
 BOT_ID = os.environ["BOT_ID"]
 AT_BOT = "<@" + BOT_ID + ">"
