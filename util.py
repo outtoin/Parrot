@@ -51,10 +51,10 @@ def parrot_says(result, channel, sc):
         are valid commands. If so, then acts on the commands. If not,
         returns back what it needs for clarification.
     """
-    if type(result['message']) == str:
+    if isinstance(result['message'], str):
         sc.api_call("chat.postMessage", channel=channel,
                     text=result['message'], as_user=True)
-    elif type(result['message']) == list:
+    elif isinstance(result['message'], list):
         sc.api_call("chat.postMessage", channel=channel,
                     attachments=json.dumps(result['message']), as_user=True)
     return print("Post message")

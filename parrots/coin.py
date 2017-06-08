@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 
 from time import time
 
-import json
-
 
 class CoinParrot:
     URI = "https://www.bithumb.com/"
@@ -28,16 +26,19 @@ class CoinParrot:
         for row in rows:
             cols = row.find_all('td')
             cols = [element.text.strip() for element in cols]
+            print(cols)
             data = dict(
                 coinName=cols[0],
                 coinPrice=cols[1],
                 coinPriceChange=cols[2],
                 coinPriceChange_pm=cols[2].split(' ')[0] if len(
-                    cols[2].split(' ')) > 4 else 0,
+                    cols[2].split(' ')) > 4 else '0',
                 coinPriceChange_num=cols[2].split(' ')[1] if len(
-                    cols[2].split(' ')) > 4 else 0,
+                    cols[2].split(' ')) > 4 else '0',
                 coinPriceChange_percent=cols[2].split(' ')[4] if len(
-                    cols[2].split(' ')) > 4 else 0
+                    cols[2].split(' ')) > 4 else '0',
+                coinTradingVolume=cols[3],
+                coinTradingVolumePrice=cols[5].split(' ')[1]
             )
             result.append(data)
 
@@ -58,6 +59,11 @@ class CoinParrot:
                     "text": data['coinPrice'],
                     "color": color,
                     "fields": [
+                        {
+                            "title": '거래량',
+                            "value": data['coinTradingVolume'] + "(" +
+                            data['coinTradingVolumePrice'] + "원)"
+                        },
                         {
                             "title": '24시간 변동량',
                             "value": data['coinPriceChange_pm'] +
