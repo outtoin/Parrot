@@ -26,7 +26,6 @@ class CoinParrot:
         for row in rows:
             cols = row.find_all('td')
             cols = [element.text.strip() for element in cols]
-            print(cols)
             data = dict(
                 coinName=cols[0],
                 coinPrice=cols[1],
